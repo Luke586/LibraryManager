@@ -91,6 +91,7 @@ public class Book {
                 ", author='" + author + '\'' +
                 ", isIssued=" + isIssued +
                 ", genre='" + genre + '\'' +
+                ", copiesOfBook=" + copiesOfBook +
                 '}';
     }
 }
