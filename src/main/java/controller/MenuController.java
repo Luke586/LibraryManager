@@ -1,9 +1,11 @@
 package controller;
 
 import dto.Book;
+import dto.Customer;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import repository.BookRepository;
+import repository.CustomerRepository;
 
 import java.util.Scanner;
 
@@ -13,6 +15,10 @@ public class MenuController {
 
     private final Scanner scanner = new Scanner(System.in);
     private final BookRepository bookRepository;
+
+    private final CustomerRepository customerRepository;
+
+    CustomerPortal customerPortal = new CustomerPortal();
 
     BookController bookController = new BookController();
 
@@ -24,15 +30,17 @@ public class MenuController {
         this.sessionFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Book.class)
+                .addAnnotatedClass(Customer.class)
                 .buildSessionFactory();
         this.bookRepository = new BookRepository(this.sessionFactory);
+        this.customerRepository = new CustomerRepository(this.sessionFactory);
     }
     public void showOption() {
         System.out.println("" +
                 "Welcome to the Library" +
                 "\n 1. Add a book" +
                 "\n 2. View all books" +
-                "\n 3. Borrow a book" +
+                "\n 3. Customer portal" +
                 "\n 4. Remove a book" +
                 "\n 5. Update a book" +
                 "\n 6. Exit" +
@@ -50,7 +58,7 @@ public class MenuController {
                 this.bookController.viewBooks();
                 break;
             case "3":
-                this.bookController.borrowBook();
+                this.customerPortal.customerPortal();
                 break;
             case "4":
                 this.bookController.removeBookById();

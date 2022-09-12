@@ -13,11 +13,15 @@ public class Customer {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
+    private String firstName;
 
-    public Customer(Long id, String name) {
+    private String surname;
+
+
+    public Customer(Long id, String firstName, String surname) {
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.surname = surname;
     }
 
     public Customer() {
@@ -31,20 +35,28 @@ public class Customer {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
 
     @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", surname='" + surname + '\'' +
                 '}';
     }
 }

@@ -1,6 +1,7 @@
 package repository;
 
 import dto.Book;
+import dto.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -17,8 +18,6 @@ public class BookRepository {
         factory = sessionFactory;
     }
 
-
-
     public String createBook(Book book){
         Session session = factory.openSession();
         Transaction transaction = null;
@@ -34,11 +33,8 @@ public class BookRepository {
         }finally {
             session.close();
         }
-
         return "Book created successfully";
     }
-
-
     public Book viewBooks() {
         Session session = factory.openSession();
         Transaction transaction = null;
@@ -84,8 +80,6 @@ public class BookRepository {
         }
         return book;
     }
-
-
     public Book findBookById(Long id) {
         Transaction transaction = null;
         Book book = null;
@@ -126,7 +120,7 @@ public class BookRepository {
         return "Book removed successfully!";
     }
 
-    public Book borrowBook(String bookTitle){
+    public Book borrowBook(String bookTitle, Customer customer){
         Transaction transaction = null;
         Book book = null;
 
@@ -145,5 +139,8 @@ public class BookRepository {
 
         return book;
     }
+
+//    public Book returnBook() {
+//    }
 }
 

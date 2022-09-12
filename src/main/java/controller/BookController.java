@@ -2,6 +2,7 @@ package controller;
 
 
 import dto.Book;
+import dto.Customer;
 import org.hibernate.SessionFactory;
 import repository.BookRepository;
 
@@ -41,6 +42,8 @@ public class BookController {
         bookRepository.deleteBook(book);
     }
 
+
+
     public void viewBooks() {
         bookRepository.viewBooks();
     }
@@ -55,9 +58,18 @@ public class BookController {
     }
 
     public void borrowBook(){
+        Book book = new Book();
         bookRepository.viewBooks();
-        System.out.println("What book would you like to borrow? ");
-        bookRepository.borrowBook(scanner.nextLine());
+        System.out.println("Please enter the title of the book you would like to borrow: ");
+        String borrow = scanner.nextLine();
+        if(borrow.equals(book.getTitle())){
+            book.setCopiesOfBook(-1L);
+
+
+
+        }
+
+
 
     }
 
