@@ -9,8 +9,8 @@ public class SessionManager {
 
     private static final SessionFactory sessionFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Book .class)
-                .addAnnotatedClass(Customer .class)
+                .addAnnotatedClass(Customer.class)
+                .addAnnotatedClass(Book.class)
                 .buildSessionFactory();
 
 

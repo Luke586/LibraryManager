@@ -1,12 +1,10 @@
 import controller.MenuController;
 import dto.Book;
 import dto.Customer;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import repository.BookRepository;
+import repository.CustomerRepository;
 
-import java.util.ArrayList;
+
 
 public class Main {
 
@@ -25,10 +23,26 @@ public class Main {
 //        ArrayList<Book> allBooks = (ArrayList<Book>) session.createQuery("From books", Book.class).getResultList();
 //
 //        System.out.println(allBooks);
+//
+//        MenuController menuController = new MenuController();
+//
+//        menuController.start();
+//
+        CustomerRepository customerRepository = new CustomerRepository();
+        Customer customer = customerRepository.findCustomerById(2L);
+        System.out.println(customer.getBooks());
+        BookRepository bookRepository = new BookRepository();
+        Book book = bookRepository.findBookById(1L);
 
-        MenuController menuController = new MenuController();
+//        book.getCustomer().forEach(customer -> System.out.println(customer.getFirstName()));
+        book.getCustomer().forEach(System.out::println);
+        System.out.println("12312423kj54k23j5jh324jtkhrjhagjhahjgfsdhjgh'akgkdgjgkajgas");
 
-        menuController.start();
+//        List<Book> allBook = bookRepository.findAllBooks();
+//        List<Book> booksCustomerHasBorrowed = allBook.stream().flatMap(book1 -> book1.getCustomer().stream().filter(customer1 -> customer1.getId() == customer.getId()));
+
+
+
 
 
 

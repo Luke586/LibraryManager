@@ -4,8 +4,10 @@ import dto.Book;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,6 +31,25 @@ public class BookRepository {
             session.close();
         }
         return "Book created successfully";
+    }
+
+    public List<Book> findAllBooks() {
+        Session session = factory.openSession();
+        Transaction transaction = null;
+        List<Book> books = null;
+        try {
+            transaction = session.beginTransaction();
+            books = session.createQuery("From books",Book.class).list();
+            transaction.commit();
+        } catch (Exception exception) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            System.out.println(exception.getClass() + ": " + exception.getMessage());
+        } finally {
+            session.close();
+        }
+        return books;
     }
     public void viewBooks() {
         Session session = factory.openSession();
@@ -56,6 +77,16 @@ public class BookRepository {
         }
     }
 
+    public void viewFoundBooks(List<Book> bookList) {
+        for (Book book : bookList) {
+            System.out.println("Book ID: " + book.getId());
+            System.out.println("Book title: " + book.getTitle());
+            System.out.println("Book author: " + book.getAuthor());
+            System.out.println("Book genre: " + book.getGenre());
+            System.out.println("Copies of book: " + book.getCopiesOfBook());
+            System.out.println("=====================================");
+        }
+    }
     public Book updateBook(Long copiesOfBook, Long id) {
         Transaction transaction = null;
         Book book = null;
@@ -80,12 +111,10 @@ public class BookRepository {
 
         try (Session session = factory.openSession()) {
             transaction = session.beginTransaction();
-
             book = session.find(Book.class, id);
+
             System.out.println(book);
-
             transaction.commit();
-
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -93,6 +122,24 @@ public class BookRepository {
             e.printStackTrace();
         }
         return book;
+    }
+
+    public List<Book> searchBookByTitle(String title) {
+        Transaction transaction = null;
+        List<Book> bookList = new ArrayList<>();
+        try (Session session = factory.openSession()){
+            transaction = session.beginTransaction();
+            Query<Book> bookQuery = session.createQuery("From books Where title like :bookTitle",Book.class);
+            bookQuery.setParameter("bookTitle",'%' + title + '%');
+            bookList = bookQuery.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return bookList;
     }
 
 
@@ -110,7 +157,6 @@ public class BookRepository {
         }
         return "Book removed successfully!";
     }
-
     public Book borrowBook(Book book){
         Transaction transaction = null;
 
@@ -125,7 +171,6 @@ public class BookRepository {
             }
             e.printStackTrace();
         }
-
         return book;
     }
 

@@ -7,20 +7,14 @@ import org.hibernate.SessionFactory;
 import repository.BookRepository;
 import repository.CustomerRepository;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class BookController {
-
-
     static SessionFactory factory;
-
     private final Scanner scanner = new Scanner(System.in);
-
     BookRepository bookRepository = new BookRepository();
-
     CustomerRepository customerRepository = new CustomerRepository();
-
-
     public void createBook() {
         Book book = new Book();
 
@@ -62,15 +56,20 @@ public class BookController {
 
     public void borrowBook(){
         Book book = null;
+        List<Book> bookList;
         Customer customer = null;
         bookRepository.viewBooks();
-        System.out.println("Please enter the id of book you want to borrow: ");
-        Long borrow = scanner.nextLong();
-        book = bookRepository.findBookById(borrow);
+        System.out.println("Please enter the title of book you want to borrow: ");
+        String borrow = scanner.nextLine();
+        bookList = bookRepository.searchBookByTitle(borrow);
+        bookRepository.viewFoundBooks(bookList);
+        System.out.println("Please enter Id of the book you want to borrow: ");
+        Long bookId = Long.valueOf(scanner.nextLine());
+        book = bookRepository.findBookById(bookId);
         customerRepository.displayCustomers();
         System.out.println("Please enter your customer ID");
-        Long id = scanner.nextLong();
-        customer = customerRepository.findCustomerById(id);
+        Long customerId = Long.valueOf(scanner.nextLine());
+        customer = customerRepository.findCustomerById(customerId);
         if(book != null && customer != null){
             if(book.getCopiesOfBook()-1 < 0){
                 System.out.println("Sorry no copies left");

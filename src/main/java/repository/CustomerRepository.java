@@ -68,9 +68,9 @@ public class CustomerRepository {
     }
 
     public void displayCustomers() {
-        Session session = factory.openSession();
         Transaction transaction = null;
-        try {
+
+        try (Session session = factory.openSession()){
             transaction = session.beginTransaction();
             List<Customer> customers = session.createQuery("From customers",Customer.class).list();
             for (Customer o : customers) {
@@ -85,8 +85,6 @@ public class CustomerRepository {
                 transaction.rollback();
             }
             System.out.println(exception.getClass() + ": " + exception.getMessage());
-        } finally {
-            session.close();
         }
     }
 }
