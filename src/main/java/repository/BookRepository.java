@@ -1,22 +1,17 @@
 package repository;
 
 import dto.Book;
-import dto.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 
 public class BookRepository {
 
-    static SessionFactory factory;
-
-    public BookRepository(SessionFactory sessionFactory) {
-        factory = sessionFactory;
-    }
+    private static final SessionFactory factory = SessionManager.getSessionFactory();
 
     public String createBook(Book book){
         Session session = factory.openSession();
@@ -35,15 +30,15 @@ public class BookRepository {
         }
         return "Book created successfully";
     }
-    public Book viewBooks() {
+    public void viewBooks() {
         Session session = factory.openSession();
         Transaction transaction = null;
-        Book book = null;
+
         try {
             transaction = session.beginTransaction();
-            List books = session.createQuery("From books").list();
-            for (Object o : books) {
-                book = (Book) o;
+            List<Book> books = session.createQuery("From books",Book.class).list();
+            for (Book book : books) {
+                System.out.println("Book ID: " + book.getId());
                 System.out.println("Book title: " + book.getTitle());
                 System.out.println("Book author: " + book.getAuthor());
                 System.out.println("Book genre: " + book.getGenre());
@@ -59,7 +54,6 @@ public class BookRepository {
         } finally {
             session.close();
         }
-        return book;
     }
 
     public Book updateBook(Long copiesOfBook, Long id) {
@@ -101,16 +95,13 @@ public class BookRepository {
         return book;
     }
 
+
     public String deleteBook(Book book) {
         Transaction transaction = null;
-
         try (Session session = factory.openSession()) {
             transaction = session.beginTransaction();
-
             session.remove(book);
-
             transaction.commit();
-
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -120,13 +111,11 @@ public class BookRepository {
         return "Book removed successfully!";
     }
 
-    public Book borrowBook(String bookTitle, Customer customer){
+    public Book borrowBook(Book book){
         Transaction transaction = null;
-        Book book = null;
 
         try (Session session = factory.openSession()) {
             transaction = session.beginTransaction();
-            book = session.find(Book.class, bookTitle);
             session.merge(book);
             transaction.commit();
 

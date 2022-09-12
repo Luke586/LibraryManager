@@ -1,10 +1,8 @@
 package dto;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.List;
 
 
 @Entity(name = "books")
@@ -20,12 +18,12 @@ public class Book {
     private String genre;
 
     private Long copiesOfBook;
+    @ManyToMany
+    private List<Customer> customer;
 
 
 
-
-
-    public Book(Long id, String title, String author, String genre, Long copiesOfBook ) {
+    public Book(Long id, String title, String author, String genre, Long copiesOfBook) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -34,8 +32,15 @@ public class Book {
 
     }
 
-    public Book() {
+    public List<Customer> getCustomer() {
+        return customer;
+    }
 
+    public void setCustomer(List<Customer> customer) {
+        this.customer = customer;
+    }
+
+    public Book() {
     }
 
     public Long getId() {
@@ -87,8 +92,13 @@ public class Book {
                 ", author='" + author + '\'' +
                 ", genre='" + genre + '\'' +
                 ", copiesOfBook=" + copiesOfBook +
+                ", customer=" + customer +
                 '}';
     }
+
 }
+
+
+
 
 

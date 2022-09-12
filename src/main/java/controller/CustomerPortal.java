@@ -1,8 +1,6 @@
 package controller;
 
 import dto.Customer;
-import org.hibernate.SessionFactory;
-import repository.BookRepository;
 import repository.CustomerRepository;
 
 import java.util.Scanner;
@@ -10,19 +8,14 @@ import java.util.Scanner;
 public class CustomerPortal {
 
 
-    static SessionFactory factory;
-
     private final Scanner scanner = new Scanner(System.in);
 
-    BookRepository bookRepository = new BookRepository(factory);
+    private final BookController bookController = new BookController();
 
-    CustomerRepository customerRepository = new CustomerRepository(factory);
-
-    MenuController menuController;
-
+    private final CustomerRepository customerRepository = new CustomerRepository();
 
     public void customerPortal() {
-        Customer customer = new Customer();
+        MenuController menuController = new MenuController();
         System.out.println("Do you have an account with us? " +
                 "\n 1. Yes" +
                 "\n 2. No");
@@ -36,23 +29,12 @@ public class CustomerPortal {
                     "\n 5. Exit");
             String userChoice = scanner.nextLine();
             switch (userChoice) {
-//                    case "1":
-//                        bookRepository.borrowBook();
-//                        break;
-//                    case "2":
-//                        bookRepository.returnBook();
-//                        break;
-                case "3":
-                    deleteCustomer();
-                    break;
-                case "4":
-                    menuController.start();
-                    break;
-                case "5":
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Choose an option from the list!");
+                case "1" -> bookController.borrowBook();
+//              case "2" -> bookRepository.returnBook();
+                case "3" -> deleteCustomer();
+                case "4" -> menuController.start();
+                case "5" -> System.exit(0);
+                default -> System.out.println("Choose an option from the list!");
             }
         }
         if (account.equals("2")){
@@ -64,10 +46,8 @@ public class CustomerPortal {
                 createCustomer();
             }
             if (optionToCreateAnAccount.equals("2")){
-                this.menuController.start();
+                menuController.start();
             }
-
-
         }
     }
     public void createCustomer(){

@@ -1,23 +1,22 @@
 package repository;
 
-import dto.Book;
 import dto.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import java.util.List;
 
 public class CustomerRepository {
 
-    static SessionFactory factory;
-    public CustomerRepository(SessionFactory sessionFactory) {
-        factory = sessionFactory;
-    }
+    private static final SessionFactory factory = SessionManager.getSessionFactory();
+
     public String createCustomer(Customer customer) {
         Session session = factory.openSession();
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
             session.merge(customer);
+
             transaction.commit();
         } catch (Exception exception) {
             if (transaction != null) {
@@ -66,5 +65,28 @@ public class CustomerRepository {
             e.printStackTrace();
         }
         return customer;
+    }
+
+    public void displayCustomers() {
+        Session session = factory.openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            List<Customer> customers = session.createQuery("From customers",Customer.class).list();
+            for (Customer o : customers) {
+                System.out.println("Customer ID: " + o.getId());
+                System.out.println("Customer name : " + o.getFirstName());
+                System.out.println("Customer surname: " + o.getSurname());
+                System.out.println("=====================================");
+            }
+            transaction.commit();
+        } catch (Exception exception) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            System.out.println(exception.getClass() + ": " + exception.getMessage());
+        } finally {
+            session.close();
+        }
     }
 }

@@ -14,10 +14,6 @@ public class MenuController {
     SessionFactory sessionFactory;
 
     private final Scanner scanner = new Scanner(System.in);
-    private final BookRepository bookRepository;
-
-    private final CustomerRepository customerRepository;
-
     CustomerPortal customerPortal = new CustomerPortal();
 
     BookController bookController = new BookController();
@@ -25,15 +21,6 @@ public class MenuController {
     public void start() {
         this.showOption();
         this.handleUserChoice();
-    }
-    public MenuController() {
-        this.sessionFactory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Book.class)
-                .addAnnotatedClass(Customer.class)
-                .buildSessionFactory();
-        this.bookRepository = new BookRepository(this.sessionFactory);
-        this.customerRepository = new CustomerRepository(this.sessionFactory);
     }
     public void showOption() {
         System.out.println("" +

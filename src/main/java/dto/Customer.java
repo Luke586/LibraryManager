@@ -6,8 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "customers")
+@Entity(name = "customers")
 public class Customer {
 
     @Id
@@ -22,7 +21,9 @@ public class Customer {
         this.id = id;
         this.firstName = firstName;
         this.surname = surname;
+
     }
+
 
     public Customer() {
     }

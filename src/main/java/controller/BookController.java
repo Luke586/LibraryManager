@@ -5,6 +5,7 @@ import dto.Book;
 import dto.Customer;
 import org.hibernate.SessionFactory;
 import repository.BookRepository;
+import repository.CustomerRepository;
 
 import java.util.Scanner;
 
@@ -15,7 +16,9 @@ public class BookController {
 
     private final Scanner scanner = new Scanner(System.in);
 
-    BookRepository bookRepository = new BookRepository(factory);
+    BookRepository bookRepository = new BookRepository();
+
+    CustomerRepository customerRepository = new CustomerRepository();
 
 
     public void createBook() {
@@ -58,24 +61,29 @@ public class BookController {
     }
 
     public void borrowBook(){
-        Book book = new Book();
+        Book book = null;
+        Customer customer = null;
         bookRepository.viewBooks();
-        System.out.println("Please enter the title of the book you would like to borrow: ");
-        String borrow = scanner.nextLine();
-        if(borrow.equals(book.getTitle())){
-            book.setCopiesOfBook(-1L);
-
-
-
+        System.out.println("Please enter the id of book you want to borrow: ");
+        Long borrow = scanner.nextLong();
+        book = bookRepository.findBookById(borrow);
+        customerRepository.displayCustomers();
+        System.out.println("Please enter your customer ID");
+        Long id = scanner.nextLong();
+        customer = customerRepository.findCustomerById(id);
+        if(book != null && customer != null){
+            if(book.getCopiesOfBook()-1 < 0){
+                System.out.println("Sorry no copies left");
+                return;
+            }
+            book.getCustomer().add(customer);
+            book.setCopiesOfBook(book.getCopiesOfBook()-1);
+            bookRepository.borrowBook(book);
         }
-
-
-
+      }
     }
 
 
 
 
 
-
-}
