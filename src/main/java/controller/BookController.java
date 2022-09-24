@@ -75,7 +75,6 @@ public class BookController {
                 System.out.println("Sorry no copies left");
                 return;
             }
-            book.getCustomer().add(customer);
             book.setCopiesOfBook(book.getCopiesOfBook() - 1);
             bookRepository.borrowBook(book);
         }
@@ -83,6 +82,7 @@ public class BookController {
             customer.getBooks().add(book);
             customerRepository.borrowBook(customer);
         }
+
     }
 
     public List<Book> findCustomerBorrowedBooks() {
@@ -132,8 +132,8 @@ public class BookController {
         Long customerId = Long.valueOf(scanner.nextLine());
         customer = customerRepository.findCustomerById(customerId);
         if (book != null && customer != null) {
-            customer.getBooks().remove(book);
-            book.getCustomer().remove(customer);
+            Book finalBook = book;
+            customer.getBooks().removeIf(book1 -> book1.getId().equals(finalBook.getId()));
             book.setCopiesOfBook(book.getCopiesOfBook() + 1);
             bookRepository.borrowBook(book);
             customerRepository.borrowBook(customer);

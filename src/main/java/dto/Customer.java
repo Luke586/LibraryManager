@@ -19,7 +19,7 @@ public class Customer {
     private String firstName;
     private String surname;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<Book> books;
 

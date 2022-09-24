@@ -175,6 +175,7 @@ public class BookRepository {
 
         try (Session session = factory.openSession()) {
             transaction = session.beginTransaction();
+
             session.merge(book);
             transaction.commit();
 

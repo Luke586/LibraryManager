@@ -21,10 +21,6 @@ public class Book {
     private String genre;
     private Long copiesOfBook;
 
-    @ManyToMany(fetch = FetchType.EAGER )
-    @ToString.Exclude
-    private List<Customer> customer;
-
 
 
 
