@@ -1,40 +1,40 @@
 package repository;
 
+import dto.Book;
 import dto.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerRepository {
 
     private static final SessionFactory factory = SessionManager.getSessionFactory();
 
-    public String createCustomer(Customer customer) {
-        Session session = factory.openSession();
+    public Customer createCustomer(Customer customer) {
+
         Transaction transaction = null;
-        try {
+        try (Session session = factory.openSession()) {
             transaction = session.beginTransaction();
             session.merge(customer);
-
             transaction.commit();
+
         } catch (Exception exception) {
             if (transaction != null) {
                 transaction.rollback();
             }
             System.out.println(exception.getClass() + ": " + exception.getMessage());
-        } finally {
-            session.close();
         }
-        return "Book created successfully";
+        return customer;
     }
-
-    public String deleteCustomer(Customer customer) {
+    public Customer deleteCustomer(Customer customer) {
         Transaction transaction = null;
 
         try (Session session = factory.openSession()) {
             transaction = session.beginTransaction();
-
             session.remove(customer);
             transaction.commit();
 
@@ -44,9 +44,8 @@ public class CustomerRepository {
             }
             e.printStackTrace();
         }
-        return "Book removed successfully!";
+        return customer;
     }
-
     public Customer findCustomerById(Long id) {
         Transaction transaction = null;
         Customer customer = null;
@@ -66,13 +65,54 @@ public class CustomerRepository {
         }
         return customer;
     }
+    public List<Customer> searchCustomerByName(String name) {
+        Transaction transaction = null;
+        List<Customer> customerList = new ArrayList<>();
+        try (Session session = factory.openSession()){
+            transaction = session.beginTransaction();
+            Query<Customer> customerQuery = session.createQuery("From Customer Where surname like :customerName",Customer.class);
+            customerQuery.setParameter("customerName",'%' + name + '%');
+            customerList = customerQuery.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return customerList;
+    }
 
+    public void viewFoundCustomerList(List<Customer> customerList) {
+        for (Customer customer : customerList) {
+            System.out.println("Customer ID: " + customer.getId());
+            System.out.println("First name: " + customer.getFirstName());
+            System.out.println("Surname: " + customer.getSurname());
+            System.out.println("=====================================");
+        }
+    }
+    public void displayNewlyCreatedCustomer(Customer customer) {
+        Transaction transaction = null;
+
+        try (Session session = factory.openSession()) {
+            transaction = session.beginTransaction();
+            customer = session.find(Customer.class, customer);
+            System.out.println(customer);
+            transaction.commit();
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
     public void displayCustomers() {
         Transaction transaction = null;
 
         try (Session session = factory.openSession()){
             transaction = session.beginTransaction();
-            List<Customer> customers = session.createQuery("From customers",Customer.class).list();
+            List<Customer> customers = session.createQuery("From Customer",Customer.class).list();
             for (Customer o : customers) {
                 System.out.println("Customer ID: " + o.getId());
                 System.out.println("Customer name : " + o.getFirstName());
@@ -86,5 +126,21 @@ public class CustomerRepository {
             }
             System.out.println(exception.getClass() + ": " + exception.getMessage());
         }
+    }
+    public Customer borrowBook(Customer customer){
+        Transaction transaction = null;
+
+        try (Session session = factory.openSession()) {
+            transaction = session.beginTransaction();
+            session.merge(customer);
+            transaction.commit();
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return customer;
     }
 }

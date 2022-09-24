@@ -3,6 +3,7 @@ package controller;
 import dto.Customer;
 import repository.CustomerRepository;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class CustomerPortal {
@@ -23,17 +24,19 @@ public class CustomerPortal {
         if (account.equals("1")) {
             System.out.println("Would you like to: " +
                     "\n 1. Borrow a book" +
-                    "\n 2. Return a book" +
-                    "\n 3. Delete account" +
-                    "\n 4. Return to Main menu" +
-                    "\n 5. Exit");
+                    "\n 2. List of borrowed books" +
+                    "\n 3. Return book" +
+                    "\n 4. Delete account" +
+                    "\n 5. Return to Main menu" +
+                    "\n 6. Exit");
             String userChoice = scanner.nextLine();
             switch (userChoice) {
                 case "1" -> bookController.borrowBook();
-//              case "2" -> bookRepository.returnBook();
-                case "3" -> deleteCustomer();
-                case "4" -> menuController.start();
-                case "5" -> System.exit(0);
+                case "2" -> bookController.findCustomerBorrowedBooks();
+                case "3" -> bookController.returnBook();
+                case "4" -> deleteCustomer();
+                case "5" -> menuController.start();
+                case "6" -> System.exit(0);
                 default -> System.out.println("Choose an option from the list!");
             }
         }
@@ -59,14 +62,28 @@ public class CustomerPortal {
         String surname = scanner.nextLine();
         customer.setSurname(surname);
         customerRepository.createCustomer(customer);
+//        customerRepository.displayNewlyCreatedCustomer(customer);
+        System.out.println("Thank you for Joining our library!");
+        System.out.println("Customer ID: "+customer.getId()+
+                           "\nCustomer first name: " + customer.getFirstName() +
+                           "\nCustomer Surname: " + customer.getSurname() +
+                           "\nHas been created!" +
+                           "\n");
     }
 
     public void deleteCustomer(){
-
-        System.out.println("Please enter customer ID: ");
+        List<Customer> customerList;
+        Customer customer;
+        System.out.println("Please enter your surname: ");
+        String surname = scanner.nextLine();
+        customerList = customerRepository.searchCustomerByName(surname);
+        customerRepository.viewFoundCustomerList(customerList);
+        System.out.println("Please enter your customer ID: ");
         Long id = scanner.nextLong();
-        Customer customer = customerRepository.findCustomerById(id);
+        customer = customerRepository.findCustomerById(id);
         customerRepository.deleteCustomer(customer);
+        System.out.println("Has been removed from the database!" +
+                           "\n");
     }
 
 }

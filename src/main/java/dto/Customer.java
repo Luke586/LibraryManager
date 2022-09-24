@@ -5,13 +5,13 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity(name = "customers")
+@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
+@Builder
 public class Customer {
     @Id
     @GeneratedValue

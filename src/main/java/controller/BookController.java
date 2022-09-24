@@ -15,23 +15,25 @@ public class BookController {
     private final Scanner scanner = new Scanner(System.in);
     BookRepository bookRepository = new BookRepository();
     CustomerRepository customerRepository = new CustomerRepository();
+
     public void createBook() {
         Book book = new Book();
 
-        System.out.println("Please enter title of book");
+        System.out.println("Please enter title of book: ");
         String title = scanner.nextLine();
         book.setTitle(title);
-        System.out.println("Please enter author of book");
+        System.out.println("Please enter author of book: ");
         String author = scanner.nextLine();
         book.setAuthor(author);
-        System.out.println("Please enter genre of book");
+        System.out.println("Please enter genre of book: ");
         String genre = scanner.nextLine();
         book.setGenre(genre);
-        System.out.println("Please enter how many copies of the book");
+        System.out.println("Please enter how many copies of the book: ");
         Long copies = Long.valueOf(scanner.nextLine());
         book.setCopiesOfBook(copies);
         bookRepository.createBook(book);
     }
+
     public void removeBookById() {
         System.out.println("Enter Book id to remove: ");
         Long id = Long.parseLong(scanner.nextLine());
@@ -39,13 +41,11 @@ public class BookController {
         bookRepository.deleteBook(book);
     }
 
-
-
     public void viewBooks() {
         bookRepository.viewBooks();
     }
 
-    public void updateBook(){
+    public void updateBook() {
         System.out.println("Enter Book id to update: ");
         Long id = Long.parseLong(scanner.nextLine());
         bookRepository.findBookById(id);
@@ -54,7 +54,7 @@ public class BookController {
         bookRepository.updateBook(amount, id);
     }
 
-    public void borrowBook(){
+    public void borrowBook() {
         Book book = null;
         List<Book> bookList;
         Customer customer = null;
@@ -70,17 +70,89 @@ public class BookController {
         System.out.println("Please enter your customer ID");
         Long customerId = Long.valueOf(scanner.nextLine());
         customer = customerRepository.findCustomerById(customerId);
-        if(book != null && customer != null){
-            if(book.getCopiesOfBook()-1 < 0){
+        if (book != null && customer != null) {
+            if (book.getCopiesOfBook() - 1 < 0) {
                 System.out.println("Sorry no copies left");
                 return;
             }
             book.getCustomer().add(customer);
-            book.setCopiesOfBook(book.getCopiesOfBook()-1);
+            book.setCopiesOfBook(book.getCopiesOfBook() - 1);
             bookRepository.borrowBook(book);
         }
-      }
+        if (book != null && customer != null) {
+            customer.getBooks().add(book);
+            customerRepository.borrowBook(customer);
+        }
     }
+
+    public List<Book> findCustomerBorrowedBooks() {
+        Customer customer = null;
+        List<Book> bookList;
+        customerRepository.displayCustomers();
+        System.out.println("Please enter your customer ID");
+        Long customerId = Long.valueOf(scanner.nextLine());
+        customer = customerRepository.findCustomerById(customerId);
+        bookList = customer.getBooks();
+        bookRepository.viewFoundCustomerBorrowedBooks(bookList);
+
+        return bookList;
+    }
+
+//    public List<Book> returnBook1() {
+//        Customer customer = null;
+//        List<Book> bookList;
+//        Book book = null;
+//        customerRepository.displayCustomers();
+//        System.out.println("Please enter your customer ID");
+//        Long customerId = Long.valueOf(scanner.nextLine());
+//        customer = customerRepository.findCustomerById(customerId);
+//        bookList = customer.getBooks();
+//        bookRepository.viewFoundBooks(bookList);
+//        System.out.println("What book would you like to return?");
+//        Long bookId = Long.valueOf(scanner.nextLine());
+//        book = bookRepository.findBookById(bookId);
+//        if (book != null && customer != null) {
+//            customer.getBooks().remove(book);
+//            book.setCopiesOfBook(book.getCopiesOfBook() + 1);
+//            bookRepository.borrowBook(book);
+//        }
+//
+//        return bookList;
+//    }
+    public void returnBook() {
+        Book book = null;
+        List<Book> bookList;
+        Customer customer = null;
+        bookRepository.viewBooks();
+        System.out.println("Please enter the book ID you want to return");
+        Long bookId = Long.valueOf(scanner.nextLine());
+        book = bookRepository.findBookById(bookId);
+        customerRepository.displayCustomers();
+        System.out.println("Please enter your Customer ID");
+        Long customerId = Long.valueOf(scanner.nextLine());
+        customer = customerRepository.findCustomerById(customerId);
+        if (book != null && customer != null) {
+            customer.getBooks().remove(book);
+            book.getCustomer().remove(customer);
+            book.setCopiesOfBook(book.getCopiesOfBook() + 1);
+            bookRepository.borrowBook(book);
+            customerRepository.borrowBook(customer);
+        }
+    }
+}
+
+    
+
+//        customerRepository.displayCustomers();
+////        System.out.println("Please enter your customer ID: ");
+////        Long id = Long.valueOf(scanner.nextLine());
+////        bookList = bookRepository.findCustomersBorrowedBooks(customerRepository.findCustomerById(id));
+////        bookRepository.viewFoundBooks(bookList);
+//
+// }
+
+
+
 
 
 
