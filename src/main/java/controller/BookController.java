@@ -31,10 +31,11 @@ public class BookController {
     }
     public void removeBookById() {
         List<Book> bookList;
-        String delete = JOptionPane.showInputDialog("Please enter the title of book you want to delete: ");
-        bookList = bookRepository.searchBookByTitle(delete);
+        String title = JOptionPane.showInputDialog("Please enter the title of book you want to delete: ");
+        bookList = bookRepository.searchBookByTitle(title);
+        System.out.println("\nPlease see below list of books with the title: "+title);
         bookRepository.viewFoundBooks(bookList);
-        Long id = Long.valueOf(JOptionPane.showInputDialog("Enter Book id to remove: "));
+        Long id = Long.valueOf(JOptionPane.showInputDialog("Please enter the Book id you want to remove: "));
         Book book = bookRepository.findBookById(id);
         bookRepository.deleteBook(book);
         System.out.println("\nBook deleted Successfully!");
