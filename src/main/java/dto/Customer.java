@@ -1,7 +1,6 @@
 package dto;
 
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -19,8 +18,9 @@ public class Customer {
     private String firstName;
     private String surname;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<Book> books;
+
 
 }

@@ -1,6 +1,5 @@
 package repository;
 
-import dto.Book;
 import dto.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,7 +29,7 @@ public class CustomerRepository {
         }
         return customer;
     }
-    public Customer deleteCustomer(Customer customer) {
+    public void deleteCustomer(Customer customer) {
         Transaction transaction = null;
 
         try (Session session = factory.openSession()) {
@@ -44,7 +43,6 @@ public class CustomerRepository {
             }
             e.printStackTrace();
         }
-        return customer;
     }
     public Customer findCustomerById(Long id) {
         Transaction transaction = null;
@@ -82,7 +80,6 @@ public class CustomerRepository {
         }
         return customerList;
     }
-
     public void viewFoundCustomerList(List<Customer> customerList) {
         for (Customer customer : customerList) {
             System.out.println("Customer ID: " + customer.getId());
@@ -127,7 +124,7 @@ public class CustomerRepository {
             System.out.println(exception.getClass() + ": " + exception.getMessage());
         }
     }
-    public Customer borrowBook(Customer customer){
+    public void borrowBook(Customer customer){
         Transaction transaction = null;
 
         try (Session session = factory.openSession()) {
@@ -141,6 +138,24 @@ public class CustomerRepository {
             }
             e.printStackTrace();
         }
-        return customer;
+    }
+
+    public void returnBook(Customer customer){
+        Transaction transaction = null;
+
+        try (Session session = factory.openSession()) {
+            transaction = session.beginTransaction();
+            session.merge(customer);
+            transaction.commit();
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 }
+
+
+
