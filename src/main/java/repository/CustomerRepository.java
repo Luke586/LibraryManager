@@ -80,11 +80,29 @@ public class CustomerRepository {
         }
         return customerList;
     }
+    public List<Customer> searchCustomerByAddress(String name) {
+        Transaction transaction = null;
+        List<Customer> customerList = new ArrayList<>();
+        try (Session session = factory.openSession()){
+            transaction = session.beginTransaction();
+            Query<Customer> customerQuery = session.createQuery("From Customer Where address like :addressName",Customer.class);
+            customerQuery.setParameter("addressName",'%' + name + '%');
+            customerList = customerQuery.getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return customerList;
+    }
     public void viewFoundCustomerList(List<Customer> customerList) {
         for (Customer customer : customerList) {
             System.out.println("Customer ID: " + customer.getId());
             System.out.println("First name: " + customer.getFirstName());
             System.out.println("Surname: " + customer.getSurname());
+            System.out.println("Address: " + customer.getAddress());
             System.out.println("=====================================");
         }
     }
@@ -93,8 +111,7 @@ public class CustomerRepository {
 
         try (Session session = factory.openSession()) {
             transaction = session.beginTransaction();
-            customer = session.find(Customer.class, customer);
-            System.out.println(customer);
+            session.find(Customer.class, customer);
             transaction.commit();
 
         } catch (Exception e) {
