@@ -12,7 +12,7 @@ public class CustomerPortal {
 
     public void customerUserInput() {
         MenuController menuController = new MenuController();
-        String userChoice = JOptionPane.showInputDialog("Would you like to: " +
+        String userChoice = JOptionPane.showInputDialog("Please choose an option: " +
                 "\n 1. Borrow a book" +
                 "\n 2. List of borrowed books" +
                 "\n 3. Return book" +
@@ -35,9 +35,11 @@ public class CustomerPortal {
         List<Customer> customerList;
         MenuController menuController = new MenuController();
 
-        String account = JOptionPane.showInputDialog("Do you have an account with us? " +
-                "\n 1. Yes" +
-                "\n 2. No");
+        String account = JOptionPane.showInputDialog("Please choose an option: " +
+                "\n 1. Existing customer" +
+                "\n 2. Create an account" +
+                "\n 3. Return to the Main menu" +
+                "\n 4. Exit");
         if (account.equals("1")) {
             String confirmCustomerId = JOptionPane.showInputDialog("Do you have your customer ID" +
                     "\n 1. Yes" +
@@ -54,16 +56,16 @@ public class CustomerPortal {
             }
         }
         if (account.equals("2")) {
-            String optionToCreateAnAccount = JOptionPane.showInputDialog(
-                    "Would you like to create an account with us? " +
-                            "\n 1. Yes" +
-                            "\n 2. No");
-            if (optionToCreateAnAccount.equals("1")) {
-                createCustomer();
-            }
-            if (optionToCreateAnAccount.equals("2")) {
-                menuController.start();
-            }
+          createCustomer();
+        }
+        if (account.equals("3")){
+            menuController.start();
+        }
+        if (account.equals("4")){
+            System.exit(0);
+        }
+        else {
+            System.out.println("Choose an option from the list! ");
         }
     }
 
@@ -107,7 +109,7 @@ public class CustomerPortal {
                          "\nCustomer ID: "+customer.getId()+
                          "\nCustomer first name: " + customer.getFirstName() +
                          "\nCustomer Surname: " + customer.getSurname() +
-                         "\nPlease Choose an option"+
+                         "\nPlease Choose an option: "+
                          "\n1. Return to the main menu" +
                          "\n2. Exit");
         switch (userChoice) {

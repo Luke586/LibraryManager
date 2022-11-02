@@ -10,6 +10,7 @@ import repository.CustomerRepository;
 import javax.swing.*;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class BookController {
     static SessionFactory factory;
@@ -74,13 +75,14 @@ public class BookController {
                 JOptionPane.showInputDialog("Sorry no copies left!");
                 return;
             }
+            boolean isBorrowed = customer.getBooks().removeIf(book1 -> book1.getId().equals(bookId));
+            if(isBorrowed){
+                System.out.println("Sorry "+customer.getFirstName()+" "+customer.getSurname()+" you have already borrowed this "+book);
+                return;
+            }
             book.setCopiesOfBook(book.getCopiesOfBook() - 1);
             bookRepository.borrowBook(book);
-        }
-        if (book != null && customer != null) {
-//            if(customer.getBooks().stream().filter(book1 -> book1.getId().equals(book.getId()))) {
-//                System.out.println("Sorry, you have already borrowed this book!");
-//                return;
+
             customer.getBooks().add(book);
             customerRepository.borrowBook(customer);
             String userChoice = JOptionPane.showInputDialog("Thank you "+customer.getFirstName()+" "+customer.getSurname() + "." +
